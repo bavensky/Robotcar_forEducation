@@ -8,6 +8,15 @@
  * Date     : 10/01/2558 [dd/mm/yyyy]                                          *
  * Read more: http://arduino-info.wikispaces.com/Nrf24L01-2.4GHz-HowTo         *
  *******************************************************************************/
+//      SCK  - Pin 8  10
+//      MOSI - Pin 9  11
+//      DC   - Pin 10  12
+//      RST  - Pin 11  13
+//      CS   - Pin 12  8
+//
+//#include <LCD5110_Basic.h>
+//
+//LCD5110 myGLCD(10,11,12,13,8);
 
 /******  How to connect nRF24L01 to arduino board ********/
 //   1 - GND
@@ -28,7 +37,7 @@
 #include <nRF24L01.h>       // เรียกใช้งานไลบรารี่โมดูล nRF24L01
 #include <RF24.h>
 
-#define CE_PIN   4          // กำหนดขา CE ต่อเข้าขา 9 ของบอร์ดอาดุยโน่
+#define CE_PIN   8          // กำหนดขา CE ต่อเข้าขา 9 ของบอร์ดอาดุยโน่
 #define CSN_PIN 10          // กำหนดขา CSN ต่อเข้าขา 10 ของบอร์ดอาดุยโน่
 
 const uint64_t pipe = 0xE8E8F0F0E1LL; 
@@ -37,15 +46,15 @@ RF24 radio(CE_PIN, CSN_PIN);
 int joystick[2];            // ประกาศตัวแปรสำหรับเรียกใช้งานจอยสติ๊ก
 
 // motorleft คือมอเตอร์ทางด้านซ้าย และ motorright คือมอเตอร์ทางด้านขวา
-int motorleft1 = 2;  // กำหนดให้ตัวแปร motorleft1 เชื่อมต่อขา 2 ของบอร์ดอาดุยโน่
-int motorleft2 = 3;  // กำหนดให้ตัวแปร motorleft2 เชื่อมต่อขา 3 ของบอร์ดอาดุยโน่
-int motorright1 = 5;  // กำหนดให้ตัวแปร motorright1 เชื่อมต่อขา 4 ของบอร์ดอาดุยโน่
-int motorright2 = 6;  // กำหนดให้ตัวแปร motorright2 เชื่อมต่อขา 5 ของบอร์ดอาดุยโน่
+int motorleft1 = 3;  // กำหนดให้ตัวแปร motorleft1 เชื่อมต่อขา 2 ของบอร์ดอาดุยโน่
+int motorleft2 = 5;  // กำหนดให้ตัวแปร motorleft2 เชื่อมต่อขา 3 ของบอร์ดอาดุยโน่
+int motorright1 = 6;  // กำหนดให้ตัวแปร motorright1 เชื่อมต่อขา 4 ของบอร์ดอาดุยโน่
+int motorright2 = 2;  // กำหนดให้ตัวแปร motorright2 เชื่อมต่อขา 5 ของบอร์ดอาดุยโน่
 int speed_left, speed_right, speed_forword, speed_backword;       // ประกาศตัวแปรแบบ interger สำหรับเก็บค่าที่อ่านจากจอยสติ๊ก
 
 void setup()   
 {
-  Serial.begin(19200);
+  Serial.begin(9600);
   radio.begin();            // เริ่มใช้งาน nRF24l01               
   radio.openReadingPipe(1,pipe);
   radio.startListening();
@@ -62,58 +71,56 @@ void loop()
 }
 
 void rx()    // ประกาศฟังก์ชั่นย่อยชื่อ rx
-{
+{ 
   if ( radio.available() )  // เริ่มการรับค่า
   {
     bool done = false;
     while (!done)
     {
       done = radio.read( joystick, sizeof(joystick) );        // อ่านค่าแล้วนำมาเก็บไว้ในตัวแปรแบบอาเรย์ชื่อ joystick
-      speed_left     = map(joystick[0], 513, 0, 0, 255);
-      speed_right    = map(joystick[0], 513, 1023, 0, 255);
-      speed_forword  = map(joystick[1], 506, 1023, 0, 255);
-      speed_backword = map(joystick[1], 506, 0, 0, 255);
-      
-      Serial.print(speed_forword);
+//      speed_left     = map(joystick[0], 513, 0, 0, 255);
+//      speed_right    = map(joystick[0], 513, 1023, 0, 255);
+//      speed_forword  = map(joystick[1], 506, 1023, 0, 255);
+//      speed_backword = map(joystick[1], 506, 0, 0, 255);
+     
+      Serial.print(joystick[0]);
       Serial.print("    ");
-      Serial.println(speed_backword);
-      if(speed_left > 0)
-      {
-        left(speed_left);
-      }   
-      else if(speed_right > 0)
-      {    
-        right(speed_right);
-      }
-      else if(speed_forword > 0)
-      {
-        forword(speed_forword);
-      }     
-      else if(speed_backword > 0)
-      {
-        backword(speed_backword);
-      }
-      else
-      {
-        stopmotor();
-      }
+      Serial.println(joystick[1]);
+//      if(speed_left > 0)
+//      {
+//        left(speed_left);
+//      }   
+//      else if(speed_right > 0)
+//      {    
+//        right(speed_right);
+//      }
+//      else if(speed_forword > 0)
+//      {
+//        forword(speed_forword);
+//      }     
+//      else if(speed_backword > 0)
+//      {
+//        backword(speed_backword);
+//      }
+//      else
+//      {
+//        stopmotor();
+//      }
     } 
   }
 }
 void forword(int value)
 {
-//  analogWrite(motorleft1,  LOW);
-//  analogWrite(motorleft2,  value);
-
+  analogWrite(motorleft1,  LOW);
+  analogWrite(motorleft2,  value);
   analogWrite(motorright1,  value);
   analogWrite(motorright2,  LOW);
 }
 
 void backword(int value)
 {
-//  analogWrite(motorleft1,  LOW);
-//  analogWrite(motorleft2,  value);
-   
+  analogWrite(motorleft1,  LOW);
+  analogWrite(motorleft2,  value); 
   analogWrite(motorright1,  LOW);
   analogWrite(motorright2,  value);
 }

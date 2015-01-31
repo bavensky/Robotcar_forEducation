@@ -1,5 +1,8 @@
 char incomingByte = 0;   
-int motorleft1=2,  motorleft2=3,  motorright1=4,  motorright2=5;
+int motorleft1=3;
+int motorleft2=5;
+int motorright1=6;
+int motorright2=9;
 
 void setup() 
 {
