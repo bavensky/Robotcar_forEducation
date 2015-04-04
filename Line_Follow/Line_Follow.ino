@@ -1,4 +1,4 @@
-#include <LCD5110_Basic.h>
+#include <LCD5110_Basic.h>    // เรียกใช้งานไลบรารี่จอแสดงผล 5110
 #include <avr/pgmspace.h>
 // This program requires a Nokia 5110 LCD module.
 // correct voltage to the module.

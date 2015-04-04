@@ -87,8 +87,9 @@ void loop()
   {
     xaxis = analogRead(PIN_ANALOG_X);
     yaxis = analogRead(PIN_ANALOG_Y);
-    Serial.print(yaxis);
+    Serial.print(digitalRead(PIN_D));
     Serial.print("    ");
+    
     
     if(analogRead(PIN_ANALOG_X) < 500 )  {
       left = map(xaxis, 500, 0, 0, 255);
@@ -108,8 +109,10 @@ void loop()
       Serial.println(forward);
     }
     
-    tx_buf[0] = left;
-    tx_buf[1] = right;  
+    //tx_buf[0] = left;
+    //tx_buf[1] = right;
+    tx_buf[0] = digitalRead(PIN_D);
+    tx_buf[1] = digitalRead(PIN_B);
     tx_buf[2] = forward;    
     tx_buf[3] = backward;    
     
