@@ -10,13 +10,13 @@
 // 20 unsigned chars TX payload
 //---------------------------------------------
 // You can change the define pin. 
-#define CE       8             
+#define CE       9
 // CE_BIT:   Digital Input     Chip Enable Activates RX or TX mode
 
 #define CSN      10
 // CSN BIT:  Digital Input     SPI Chip Select
 
-#define IRQ      2  //  not use
+#define IRQ      2
 // IRQ BIT:  Digital Output    Maskable interrupt pin
 //*********************************************
 #endif

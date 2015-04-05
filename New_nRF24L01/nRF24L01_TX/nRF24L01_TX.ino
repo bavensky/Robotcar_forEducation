@@ -43,6 +43,8 @@ const byte PIN_E = 6;
 const byte PIN_F = 7;
 const byte PIN_K = 8;
 
+int a = 0;
+
 int right = 0;
 int left = 0;
 int forward = 0;
@@ -59,7 +61,6 @@ void setup()
   SPI.begin();
   delay(50);
   init_io();  // Initialize IO port
-  unsigned char sstatus=SPI_Read(STATUS);
   
   pinMode(PIN_A, INPUT);  
   pinMode(PIN_B, INPUT);  
@@ -69,14 +70,15 @@ void setup()
   pinMode(PIN_F, INPUT); 
   pinMode(PIN_K, INPUT);
   
-  digitalWrite(PIN_A, HIGH);
-  digitalWrite(PIN_B, HIGH);
-  digitalWrite(PIN_C, HIGH);
-  digitalWrite(PIN_D, HIGH);
-  digitalWrite(PIN_E, HIGH);
-  digitalWrite(PIN_F, HIGH);
-  digitalWrite(PIN_K, HIGH);
-  
+//  digitalWrite(PIN_A, HIGH);
+//  digitalWrite(PIN_B, HIGH);
+//  digitalWrite(PIN_C, HIGH);
+//  digitalWrite(PIN_D, HIGH);
+//  digitalWrite(PIN_E, HIGH);
+//  digitalWrite(PIN_F, HIGH);
+//  digitalWrite(PIN_K, HIGH);
+
+  unsigned char sstatus=SPI_Read(STATUS);
   TX_Mode();  // set TX mode
   
 }
@@ -87,35 +89,49 @@ void loop()
   {
     xaxis = analogRead(PIN_ANALOG_X);
     yaxis = analogRead(PIN_ANALOG_Y);
-    Serial.print(digitalRead(PIN_D));
-    Serial.print("    ");
+//    Serial.print(digitalRead(PIN_D));
+//    Serial.print("    ");
     
     
-    if(analogRead(PIN_ANALOG_X) < 500 )  {
-      left = map(xaxis, 500, 0, 0, 255);
-      Serial.println(left);
+    if(analogRead(PIN_ANALOG_X) < 510 )  {
+      left = map(xaxis, 510, 0, 0, 255);
+      
     }
-    if(analogRead(PIN_ANALOG_X) > 510 )  {
-      right = map(xaxis, 510, 1023, 0, 255);
-      Serial.println(right);
+    if(analogRead(PIN_ANALOG_X) > 511 )  {
+      right = map(xaxis, 511, 1023, 0, 255);
+      
     }
     
     if(analogRead(PIN_ANALOG_Y) < 510 )  {
       backward = map(yaxis, 510, 0, 0, 255);
-      Serial.println(backward);
+      
     }
-    if(analogRead(PIN_ANALOG_Y) > 520 )  {
-      forward = map(yaxis, 520, 1023, 0, 255);
-      Serial.println(forward);
+    if(analogRead(PIN_ANALOG_Y) > 511 )  {
+      forward = map(yaxis, 511, 1023, 0, 255);
+     
     }
+//    Serial.print(left);  Serial.print(" ");
+//    Serial.print(right);  Serial.print(" ");
+//    Serial.print(backward);  Serial.print(" ");
+//    Serial.println(forward);
+
+    a = digitalRead(PIN_A);
+    Serial.print(a);
+    tx_buf[1] = a;
+    tx_buf[2] = 1;
+    tx_buf[3] = 2;
+    tx_buf[4] = 3;
     
-    //tx_buf[0] = left;
-    //tx_buf[1] = right;
-    tx_buf[0] = digitalRead(PIN_D);
-    tx_buf[1] = digitalRead(PIN_B);
-    tx_buf[2] = forward;    
-    tx_buf[3] = backward;    
+//    tx_buf[2] = digitalRead(PIN_B);
+//    tx_buf[3] = digitalRead(PIN_C);
+//    tx_buf[4] = digitalRead(PIN_D);
     
+//    tx_buf[1] = left;
+//    tx_buf[2] = right;
+//    tx_buf[3] = forward;    
+//    tx_buf[4] = backward;    
+    
+    delay(100);
     unsigned char sstatus = SPI_Read(STATUS);    // read register STATUS's value
     if(sstatus&TX_DS)  {      // if receive data ready (TX_DS) interrupt
       SPI_RW_Reg(FLUSH_TX,0);                                  
@@ -209,8 +225,8 @@ void TX_Mode(void)
   SPI_RW_Reg(WRITE_REG + EN_RXADDR, 0x01);  // Enable Pipe0
   SPI_RW_Reg(WRITE_REG + SETUP_RETR, 0x1a); // 500us + 86us, 10 retrans...
   SPI_RW_Reg(WRITE_REG + RF_CH, 9);        // Select RF channel 40
-  SPI_RW_Reg(WRITE_REG + RF_SETUP, 0x07);   // TX_PWR:0dBm, Datarate:2Mbps, LNA:HCURR
-  SPI_RW_Reg(WRITE_REG + CONFIG, 0x0e);     // Set PWR_UP bit, enable CRC(2 unsigned chars) & Prim:TX. MAX_RT & TX_DS enabled..
+  SPI_RW_Reg(WRITE_REG + RF_SETUP, 0x0b);   // TX_PWR:0dBm, Datarate:2Mbps, LNA:HCURR
+  SPI_RW_Reg(WRITE_REG + CONFIG, 0x0f);     // Set PWR_UP bit, enable CRC(2 unsigned chars) & Prim:TX. MAX_RT & TX_DS enabled..
   SPI_Write_Buf(WR_TX_PLOAD,tx_buf,TX_PLOAD_WIDTH);
 
   digitalWrite(CE, 1);

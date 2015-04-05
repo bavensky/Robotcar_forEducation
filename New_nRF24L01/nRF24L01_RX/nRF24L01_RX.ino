@@ -74,13 +74,13 @@ void loop()
       SPI_RW_Reg(FLUSH_RX,0);                             // clear RX_FIFO
       
       Serial.print(" ");
-      Serial.print(rx_buf[0]);                     
+      Serial.print(rx_buf[1]);                     
       Serial.print(" ");
-      Serial.print(rx_buf[1]);
+      Serial.print(rx_buf[2]);
       Serial.print(" ");
-      Serial.print(rx_buf[2]); 
+      Serial.print(rx_buf[3]); 
       Serial.print(" ");
-      Serial.print(rx_buf[3]);
+      Serial.println(rx_buf[4]);
     }
     
     SPI_RW_Reg(WRITE_REG+STATUS,status);      // clear RX_DR or TX_DS or MAX_RT interrupt flag
@@ -165,7 +165,7 @@ void RX_Mode(void)
   SPI_RW_Reg(WRITE_REG + EN_RXADDR, 0x01);  // Enable Pipe0
   SPI_RW_Reg(WRITE_REG + RF_CH, 9);        // Select RF channel 40
   SPI_RW_Reg(WRITE_REG + RX_PW_P0, TX_PLOAD_WIDTH); // Select same RX payload width as TX Payload width
-  SPI_RW_Reg(WRITE_REG + RF_SETUP, 0x07);   // TX_PWR:0dBm, Datarate:2Mbps, LNA:HCURR
+  SPI_RW_Reg(WRITE_REG + RF_SETUP, 0x0b);   // TX_PWR:0dBm, Datarate:2Mbps, LNA:HCURR
   SPI_RW_Reg(WRITE_REG + CONFIG, 0x0f);     // Set PWR_UP bit, enable CRC(2 unsigned chars) & Prim:RX. RX_DR enabled..
   digitalWrite(CE, 1);                             // Set CE pin high to enable RX device
   //  This device is now ready to receive one packet of 16 unsigned chars payload from a TX device sending to address
