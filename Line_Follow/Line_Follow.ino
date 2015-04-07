@@ -166,21 +166,21 @@ void read_switch()  {
     delay(200);
     key = 'X';
   }
-  if(switch_all > 600  &&  switch_all < 800)  {
-    delay(200);
-    key = 'E';
-  }
-  if(switch_all > 450  &&  switch_all < 600)  {
-    delay(200);
-    key = 'C';
-  }
-  if(switch_all > 200  &&  switch_all < 400)  {
-    delay(200);
-    key = 'P';
-  }
-  if(switch_all > 100  &&  switch_all < 300)  {
+  if(switch_all > 720 && switch_all < 800)  {
     delay(200);
     key = 'M';
+  }
+  if(switch_all > 450  &&  switch_all < 550)  {
+    delay(200);
+    key = 'S';
+  }
+  if(switch_all > 300  &&  switch_all < 400)  {
+    delay(200);
+    key = 'U';
+  }
+  if(switch_all < 200)  {
+    delay(200);
+    key = 'D';
   }
 }
 
